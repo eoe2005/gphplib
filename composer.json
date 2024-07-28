@@ -1,0 +1,18 @@
+{
+    "name": "eoe2005/gphplib",
+    "type": "library",
+    "homepage": "https://github.com/eoe2005/gphplib",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "G\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "吃掉大象的蚂蚁",
+            "email": "eoe2005@qq.com"
+        }
+    ],
+    "require": {}
+}

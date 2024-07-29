@@ -60,9 +60,65 @@ class DbInitCmd implements Job
         foreach ($newTables as $tn => $v){
             if(!isset($oldTables[$tn])){
                 $addTable[] = $v['sql'];
+                continue;
             }
+            $ov = $oldTables[$tn];
+            $dropF = [];//待删除的字段
+            $dropIndex = [];//待删除的索引
+            $monifyF = [];//待修改的字段
+            $addKey = [];//要增加的索引
+            $addF = [];//要增加的字段
+            $isChangeTc = $v['table_comment'] != $oldTables[$tn]['table_comment'];
+
+            foreach ($ov['fields'] as $k => $ov){
+                if(!isset($v['fields'][$k])){
+                    $dropF[] = $k;
+                }else{
+                    $keys = ['type','null','defalut','ext','comment'];
+                   $nv = $v['fields'][$k];
+                   foreach ($keys as $kk){
+                       if($ov[$kk] != $nv[$kk]){
+                           $monifyF[] = $k;
+                       }
+                   }
+                }
+            }
+            foreach ($ov['indexs'] as $k => $ov){
+                if(!isset($v['indexs'][$k])){
+                    $dropIndex[] = $k;
+                    continue;
+                }
+                $ni = $v['indexs'][$k];
+                if($ni['type'] != $ov['type']){
+                    $dropIndex[] = $k;
+                    continue;
+                }
+                foreach ($ni['keys'] as $item){
+                    if(!in_array($item,$ov['keys'])){
+                        $dropIndex[] = $k;
+                        break;
+                    }
+                }
+                foreach ($ov['keys'] as $item){
+                    if(!in_array($item,$ni['keys'])){
+                        $dropIndex[] = $k;
+                        break;
+                    }
+                }
+            }
+            foreach ($v['fields'] as $k => $nv){
+                if(!isset($ov['fields'][$k])){
+                    $addF[] = $k;
+                }
+            }
+            foreach ($v['indexs'] as $k => $nv){
+                if(!isset($v['indexs'][$k])){
+                    $addKey[] = $k;
+                }
+            }
+            var_dump($isChangeTc,$dropF,$dropIndex,$monifyF,$addKey,$addF);
         }
-        var_dump($addTable);
+
     }
 
     private function parseTable($str){
@@ -77,12 +133,14 @@ class DbInitCmd implements Job
         $lines = explode(',',$ext);
         $fields = [];
         $indexs = [];
+        $fsort = [];
         foreach ($lines as $line){
             $line = trim($line);
             $fc = strtolower($line[0]);
             if($fc == '`'){
                 list($f,$info) = $this->parseField($line);
                 $fields[$f] = $info;
+                $fsort[] = $f;
             }elseif($fc == 'k'){//索引
                 list($f,$info) = $this->parseKey($line);
                 $indexs[$f] = [
@@ -116,7 +174,8 @@ class DbInitCmd implements Job
                 'sql' => $item,
                 'fields' => $fields,
                 'indexs' => $indexs,
-                'ext' => $tc
+                'table_comment' => $tc,
+                'field_sort' => $fsort,
             ]
         ];
     }

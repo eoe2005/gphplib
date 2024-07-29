@@ -2,7 +2,10 @@
 
 namespace G;
 define('DS',DIRECTORY_SEPARATOR);
-define('APP_ROOT','');
+//APP_ROOT 应用根目录
+//APP_NAME 应用名称
+//APP_CONTROLLER
+//APP_ACTION
 class Bootstarp
 {
     static function Run(){
@@ -11,8 +14,10 @@ class Bootstarp
             Log::flush();
         });
         if(php_sapi_name() == 'cli'){
+            define('APP_ROOT',realpath($_SERVER['DOCUMENT_ROOT']));
             self::cli();
         }else{
+            define('APP_ROOT',dirname(realpath($_SERVER['DOCUMENT_ROOT'])));
             self::web();
         }
     }
@@ -24,14 +29,52 @@ class Bootstarp
         header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, OPTIONS');
         header('Access-Control-Allow-Credentials: true');
 
-        $app = Req::getApp();
         $path = $_SERVER['REQUEST_URI'];
-        $path = substr($path,1);
+        $path = ltrim($path,'/');
+        $i = strpos($path,'.');
+        if($i !== false){
+            $path = substr($path,0,$i);
+        }
         $paths = explode('/',$path);
+        if(Conf::get('app.is_domain') == '1'){
+            $domain = $_SERVER['HTTP_HOST'];
+            $ds = Conf::get('domain',[]);
+            foreach ($ds as $k => $v) {
+                if(strpos($domain,$k) === true){
+                    define('APP_NAME',ucfirst($v));
+                    break;
+                }
+            }
+            if(!defined('APP_NAME')){
+                define('APP_NAME','Www');
+            }
+        }else{
+            $ad = ucfirst($paths[0]);
+            if(!$ad){
+                define('APP_NAME','Www');
+            }else{
+                if(is_dir(APP_ROOT.DS.'App/Apps/'.$ad)){
+                    define('APP_NAME',$ad);
+                }
+                $paths = array_slice($paths,1);
+            }
+        }
 
-        $clsPre = '\\Apps\\Domain\\'.$app.'\\';
-        $controllerCls = $clsPre .'Controllers\\'. ucfirst($paths[0] ?? '').'Controller';
-        $actName = ($paths[1] ?? '').'Action';
+        $clsPre = '\\Apps\\Domain\\'.APP_NAME.'\\';
+        $contname = $paths[0] ?? 'index';
+        if(!$contname){
+            $contname = 'index';
+        }
+        $acname = $paths[1] ?? 'index';
+        if(!$acname){
+            $acname = 'index';
+        }
+        $controllerCls = $clsPre .'Controllers\\'. ucfirst($contname).'Controller';
+        $actName = $acname.'Action';
+
+        define('APP_CONTROLLER',ucfirst($contname));
+        define('APP_ACTION',$acname);
+
         $pargs = isset($paths[2]) ? array_slice($paths,2) : [];
 
         $middleCls = $clsPre.'Middleware';

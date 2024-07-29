@@ -12,7 +12,7 @@ class Template
      */
     static function fetch($tpl,$args = []){
 
-        $file = APP_ROOT.'/App/Apps/'.$tpl.'.php';
+        $file = $tpl.'.php';
         if(!file_exists($file)){
             throw new \Exception('模版错误',500);
         }

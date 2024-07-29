@@ -59,7 +59,7 @@ class Log
             $driver = $logconf['driver'] ?? 'file';
             if($driver == 'file'){
                 $dir = $logconf['file.dir'] ?? '/tmp';
-                file_put_contents(sprintf('%s/%s%s_%s.log',$dir,Req::getApp(),(php_sapi_name() == 'cli' ? '_cli' : ''),date('Ymd')),implode("\r\n",self::$_data),FILE_APPEND);
+                file_put_contents(sprintf('%s/%s%s_%s.log',$dir,APP_NAME,(php_sapi_name() == 'cli' ? '_cli' : ''),date('Ymd')),implode("\r\n",self::$_data),FILE_APPEND);
             }
 //            file_put_contents(sprintf('%s/%s%s_%s.log',Conf::get('log.path','/tmp'),Req::getApp(),(php_sapi_name() == 'cli' ? '_cli' : ''),date('Ymd')),implode("\r\n",self::$_data),FILE_APPEND);
             self::$_data = [];

@@ -31,13 +31,7 @@ class Req
         return $ip;
     }
 
-    static function getApp(){
-        if(!self::$_appName){
-            $name = explode('.',$_SERVER['HTTP_HOST']);
-            self::$_appName = ucfirst($name[0] ?? '');
-        }
-        return self::$_appName;
-    }
+
     static function input($key,$def = ''){
         return $_REQUEST[$key] ?? $def;
     }

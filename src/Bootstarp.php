@@ -1,6 +1,8 @@
 <?php
 
 namespace G;
+use G\Cmd\CmdConf;
+
 define('DS',DIRECTORY_SEPARATOR);
 //APP_ROOT 应用根目录
 //APP_NAME 应用名称
@@ -132,7 +134,7 @@ class Bootstarp
             $args = array_slice($_SERVER['argv'],2);
         }
 
-        $jobMap = Conf::get('jobs',[]);
+        $jobMap = CmdConf::getConf(Conf::get('jobs',[]));
         $jonCls = $jobMap[$jobName] ?? '';
         if(!$jonCls){
             echo "命令：\n";

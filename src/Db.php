@@ -5,6 +5,7 @@ namespace G;
  * @method static query($sql,$args = [])
  * @method static begin(\Countable $call)
  * @method static getLastID()
+ * @method static exec($sql)
  */
 class Db
 {
@@ -63,6 +64,9 @@ class Db
             return false;
         }
     }
+    private function exec($sql){
+        return $this->_pdo->exec($sql);
+    }
     private function getLastID(){
         return $this->_pdo->lastInsertId();
     }
@@ -82,8 +86,8 @@ class Db
      * @param $tname
      * @return Model
      */
-    static function table($tname){
-        return new Model($tname);
+    static function table($tname,$isPre = true){
+        return new Model($tname,$isPre);
     }
 
 

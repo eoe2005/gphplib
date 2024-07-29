@@ -1,7 +1,8 @@
 <?php
 
 namespace G;
-
+define('DS',DIRECTORY_SEPARATOR);
+define('APP_ROOT','');
 class Bootstarp
 {
     static function Run(){

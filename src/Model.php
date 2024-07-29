@@ -59,7 +59,7 @@ class Model
     public function __construct($tbname = '')
     {
         if($tbname){
-            $this->tableName = Conf::get('database.tablepre').$tbname;
+            $this->tableName = Conf::get('database.tablepre','').$tbname;
         }else{
             $name = str_replace('Model','',basename(str_replace('\\','/',get_called_class())) );
             $name = preg_replace_callback("/[A-Z]/",function ($m){

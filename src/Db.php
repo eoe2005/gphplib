@@ -9,9 +9,10 @@ namespace G;
 class Db
 {
     /**
-     * @var \Base\Db
+     * @var \G\Db
      */
     private static $self = null;
+
 
     /**
      * @var \PDO
@@ -27,7 +28,13 @@ class Db
 
     private function __construct()
     {
-        $this->_pdo = new \PDO(sprintf("mysql:host=%s;dbname=%s",Conf::get('database.host','127.0.0.1'),Conf::get('database.dbname','test')),Conf::get('database.user','root'),Conf::get('database.passwd',''));
+        $conf = Conf::get('database',[]);
+        $driver = $conf['driver'] ?? 'mysql';
+        if($driver == 'mysql'){
+            $this->_pdo = new \PDO(sprintf("mysql:host=%s;dbname=%s",$conf['host'] ?? '127.0.0.1',$conf['dbname'] ?? 'test'),$conf['user'] ?? 'root',$conf['passwd'] ?? '');
+        }else{
+            throw new \Exception('系统配置错误',500);
+        }
     }
     private function __clone()
     {

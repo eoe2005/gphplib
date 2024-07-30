@@ -165,8 +165,9 @@ class DbInitCmd implements Job
         }
         echo sprintf("删除表 : %s\n",implode(',',$delTable));
         foreach ($delTable as $tb){
-
-            Db::exec(sprintf("DROP TABLE `%s`",$tb));
+            if(!in_array($tb,['sys_mq'])){
+                Db::exec(sprintf("DROP TABLE `%s`",$tb));
+            }
         }
         //添加表
         foreach ($addTable as $sql){

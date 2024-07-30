@@ -65,6 +65,7 @@ class Db
         }
     }
     private function exec($sql){
+        Log::Sql($sql);
         return $this->_pdo->exec($sql);
     }
     private function getLastID(){

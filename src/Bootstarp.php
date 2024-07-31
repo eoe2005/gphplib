@@ -62,7 +62,7 @@ class Bootstarp
             }
         }
 
-        $clsPre = '\\Apps\\Domain\\'.APP_NAME.'\\';
+        $clsPre = '\\App\\Apps\\'.APP_NAME.'\\';
         $contname = $paths[0] ?? 'index';
         if(!$contname){
             $contname = 'index';

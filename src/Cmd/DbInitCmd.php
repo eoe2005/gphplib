@@ -54,7 +54,7 @@ class DbInitCmd implements Job
         $delTable = [];
         $addTable = [];
         foreach ($oldTables as $tn => $v){
-            if(!isset($newTables[$tn])){
+            if(!isset($newTables[$tn]) && !in_array($tn,self::$_systables)){
                 $delTable[] = $tn;
             }
         }
@@ -127,13 +127,6 @@ class DbInitCmd implements Job
                     $addKey[] = $k;
                 }
             }
-
-
-
-
-
-
-
             if($isChangeTc){//修改表备注
                 Db::exec(sprintf("ALTER TABLE `%s` COMMENT='%s'",$tn,$ntable['table_comment']));
             }
@@ -309,5 +302,6 @@ class DbInitCmd implements Job
         return file_get_contents(APP_ROOT.'/App/db.sql');
     }
 
+    private static $_systables = ['sys_mq'];
 
 }

@@ -138,13 +138,13 @@ class DbInitCmd implements Job
             foreach ($dropF as $item){
                 Db::exec(sprintf("ALTER TABLE `%s` DROP COLUMN `%s`",$tn,$item));
             }
-            echo sprintf("修改字段 : %s\n",implode(',',$monifyF));
-            foreach ($monifyF as $item){//修改字段
-                Db::exec(sprintf("ALTER TABLE `%s` CHANGE `%s` %s",$tn,$item,$this->buildField($ntable,$item)));
-            }
             echo sprintf("添加字段 : %s\n",implode(',',$addF));
             foreach ($addF as $item){//添加字段
                 Db::exec(sprintf("ALTER TABLE `%s` ADD %s",$tn,$this->buildField($ntable,$item)));
+            }
+            echo sprintf("修改字段 : %s\n",implode(',',$monifyF));
+            foreach ($monifyF as $item){//修改字段
+                Db::exec(sprintf("ALTER TABLE `%s` CHANGE `%s` %s",$tn,$item,$this->buildField($ntable,$item)));
             }
             echo sprintf("添加索引 : %s\n",implode(',',$addKey));
             foreach ($addKey as $item){//添加索引
@@ -264,7 +264,8 @@ class DbInitCmd implements Job
         $lis = explode(' ',$uline);
 
         $types = $lis[0];
-        if($lis[1] == 'UNSIGNED'){
+        $sstw = $lis[1] ?? '';
+        if($sstw == 'UNSIGNED'){
             $types .= ' UNSIGNED';
         }
         $ret = [

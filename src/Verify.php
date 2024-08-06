@@ -14,6 +14,7 @@ class Verify
         foreach ($rule as $key => $val){
             $rules = $val['rules'];
             if (is_string($val['rules'])){
+                $rules = [];
                 $keys = explode('|',$val['rules']);
                 foreach ($keys as $vv){
                     $rules[$vv] = $val['msg'];

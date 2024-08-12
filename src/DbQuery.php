@@ -234,14 +234,14 @@ class DbQuery
     }
     function select($keys){
         if(!$keys){
-            return ;
+            return $this;
         }
         $this->_select = $keys;
         return $this;
     }
     function where($where){
         if(!$where){
-            return ;
+            return $this;
         }
         $this->_where = $where;
         return $this;

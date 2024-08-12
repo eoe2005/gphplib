@@ -300,7 +300,7 @@ class DbInitCmd implements Job
         ];
     }
     private function getTableString(){
-        $ret = file_get_contents(realpath(__DIR__).'/Logic/db.sql');
+        $ret = file_get_contents(dirname(realpath(__DIR__)).'/Logic/db.sql');
         return $ret."\n". file_get_contents(APP_ROOT.'/App/db.sql');
     }
 

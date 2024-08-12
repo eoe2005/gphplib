@@ -145,6 +145,9 @@ class DbQuery
                         foreach ($val as $v1){
                             $args[] = $v1;
                         }
+                    }elseif ($op[0] == 'like'){
+                        $where .= sprintf(' AND `%s`%s ?',$kk[0],'%'.$op[0].'%');
+                        $args[] = $val;
                     }else{
                         $where .= sprintf(' AND `%s`%s ?',$kk[0],$op[0]);
                         $args[] = $val;

@@ -23,6 +23,6 @@ class SysAdminModel extends Model
      */
     static function genrateSign()
     {
-        return sprintf('%d', range(100000, 999999));
+        return sprintf('%d', rand(100000, 999999));
     }
 }

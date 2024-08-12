@@ -109,7 +109,7 @@ trait AdminSysTrait
             $data['sign'] = SysAdminModel::genrateSign();
             $data['passwd'] = SysAdminModel::buildPass($data['passwd'],$data['sign']);
         }
-        if(SysLinksModel::save($data)){
+        if(SysAdminModel::save($data)){
             return 'ok';
         }
         throw new \Exception('保存失败');

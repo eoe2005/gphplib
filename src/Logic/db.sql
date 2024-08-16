@@ -58,3 +58,39 @@ CREATE TABLE `t_sys_links`
 ) ENGINE = innodb
   DEFAULT CHARSET = utf8mb4 COMMENT ='友情链接配置';
 
+CREATE TABLE `t_sys_dot_conf`
+(
+    `id`        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `name`      VARCHAR(50)     NOT NULL DEFAULT '' COMMENT '配置名称',
+    `conf_key`  VARCHAR(32)     NOT NULL DEFAULT '' COMMENT '打点key',
+    `is_del`    TINYINT         NOT NULL DEFAULT 0 COMMENT '是否删除',
+    `create_at` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_ip` VARCHAR(20)     NOT NULL DEFAULT '' COMMENT '创建IP',
+    `update_at` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `update_ip` VARCHAR(20)     NOT NULL DEFAULT '' COMMENT '更新IP',
+    PRIMARY KEY (`id`),
+    KEY `idx_create` (`create_at`),
+    KEY `idx_update` (`update_at`),
+    UNIQUE KEY `uniq_key` (`conf_key`)
+) ENGINE = innodb
+  DEFAULT CHARSET = utf8mb4 COMMENT ='打点配置';
+
+CREATE TABLE `t_sys_dot_log`
+(
+    `id`        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `day`       DATETIME        NOT NULL COMMENT '日期',
+    `conf_id`   BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '配置ID',
+    `val`       BIGINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '值',
+    `is_del`    TINYINT         NOT NULL DEFAULT 0 COMMENT '是否删除',
+    `create_at` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_ip` VARCHAR(20)     NOT NULL DEFAULT '' COMMENT '创建IP',
+    `update_at` DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `update_ip` VARCHAR(20)     NOT NULL DEFAULT '' COMMENT '更新IP',
+    PRIMARY KEY (`id`),
+    KEY `idx_create` (`create_at`),
+    KEY `idx_update` (`update_at`),
+    UNIQUE KEY `uniq_conf_day` (`conf_id`, `day`),
+    KEY `idx_day` (`day`)
+) ENGINE = innodb
+  DEFAULT CHARSET = utf8mb4 COMMENT ='打点日志';
+

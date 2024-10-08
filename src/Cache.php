@@ -17,9 +17,9 @@ class Cache
     /**
      * @return Cache|null
      */
-    static function ins(){
+    static function ins($isApp){
         if(is_null(self::$_self)){
-            self::$_self = new static();
+            self::$_self = new static($isApp);
         }
         return self::$_self;
     }
@@ -27,10 +27,10 @@ class Cache
     /**
      * @return \Redis|null
      */
-    static function redis(){
-        return self::ins()->_redis;
+    static function redis($isApp = true){
+        return self::ins($isApp)->_redis;
     }
-    private function __construct()
+    private function __construct($isApp)
     {
         $this->_redis = new \Redis();
         if(!$this->_redis->connect(Conf::get('redis.host','127.0.0.1'))){
@@ -41,6 +41,9 @@ class Cache
             if(!$this->_redis->auth($passwd)){
                 throw new \Exception('系统异常');
             }
+        }
+        if($isApp){
+            $this->_redis->setOption(\Redis::OPT_PREFIX,'apps:'.strtolower(APP_NAME).':');
         }
     }
     private function __clone()

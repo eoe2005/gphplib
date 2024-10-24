@@ -37,6 +37,10 @@ class Bootstarp
         if($i !== false){
             $path = substr($path,0,$i);
         }
+        $pos = strpos($path,'?');
+        if($pos !== false){
+            $path = substr($path,0,$pos);
+        }
         $paths = explode('/',$path);
         if(Conf::get('app.is_domain') == '1'){
             $domain = $_SERVER['HTTP_HOST'];

@@ -26,10 +26,18 @@ class Bootstarp
 
     private static function web(){
         header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Headers: Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN');
+        header('Access-Control-Allow-Headers: Origin,token, Cookie,token,Authorization, Content-Type, If-Match, If-Modified-Since, If-None-Match, If-Unmodified-Since, X-CSRF-TOKEN, X-Requested-With');
         header('Access-Control-Expose-Headers: Authorization, authenticated');
         header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, OPTIONS');
         header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Max-Age: 10800');
+        header('Allow: *');
+
+
+        if($_SERVER['REQUEST_METHOD'] == 'OPTIONS'){
+            header("HTTP/1.1 204 No Content");
+            die();
+        }
 
         $path = $_SERVER['REQUEST_URI'];
         $path = ltrim($path,'/');
